@@ -1,7 +1,7 @@
 # ethereum-payment-system
 A basic payment system for the Ethereum blockchain using TypeScript and Node.js
 
-You can read more about this project in this article: https://codecapsule.com/2022/06/01/building-a-payment-system-for-the-ethereum-blockchain/
+You can read more about this project in this article: https://codecapsule.com/2022/06/01/building-payment-system-ethereum/
 
 # Tested use cases
 
