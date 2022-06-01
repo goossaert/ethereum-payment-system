@@ -1,0 +1,76 @@
+<div style='margin: 20px;'>
+<h1>Membership page</h1>
+<br>
+
+<div *ngIf="isAuthenticated()">
+<h2>Your current membership plan</h2>
+<ng-container *ngIf='alreadyHasPlan'>
+  You have a membership plan valid until {{ dateToLocalTimeString(planValidUntil) }}
+</ng-container>
+<ng-container *ngIf='!alreadyHasPlan'>
+  You currently do not have a membership plan.
+</ng-container>
+<br><br>
+</div>
+
+<h2>Buy a membership plan today:</h2>
+
+<mat-radio-group aria-label="Select a product">
+  <ng-container *ngIf="products.length == 0">
+    <div>
+      <p>No products available for purchase at this moment. Please check again later.</p>
+    </div>
+  </ng-container>
+  <ng-container *ngFor="let product of products">
+    <div class='membership-plan'>
+      <h3><mat-radio-button value="{{ product.sku }}" (click)="saveSelectedProductSku(product.sku)" [checked]="selectedProductSku === product.sku">{{ product.metadata.name }} for {{ product.price.value / 1e18 | number: '1.2-3'}} {{ product.price.payment_token }}</mat-radio-button></h3>
+      <p>{{ product.metadata.description }}</p>
+    </div>
+  </ng-container>
+</mat-radio-group>
+
+
+
+<ng-container *ngIf="!isAuthenticated()">
+  <button mat-raised-button color="primary" (click)="connectWalletAndPayNow()" [disabled]="products.length == 0"><mat-icon aria-label="Side nav toggle icon">shopping_cart</mat-icon> &nbsp;Buy now</button>
+</ng-container>
+
+<ng-container *ngIf="isAuthenticated()">
+  <button mat-raised-button color="primary" (click)="payNow()" [disabled]="alreadyHasPlan || products.length == 0"><mat-icon aria-label="Side nav toggle icon">shopping_cart</mat-icon> &nbsp;Buy now</button>
+  &nbsp; <span *ngIf="alreadyHasPlan">You already have a plan, no need to buy another one. If you believe this is a mistake, contact customer support.</span>
+</ng-container>
+
+<ng-container *ngIf="payment_status_icon != null">
+  <button mat-icon-button><mat-icon>{{ payment_status_icon }}</mat-icon></button>
+  <span>{{ payment_status_message }}</span>
+</ng-container>
+
+
+<div *ngIf="isAuthenticated()">
+  <br><br>
+  <h2>Your purchase history</h2>
+
+  <ng-container *ngFor="let purchase of purchases">
+    <div class='purchase-history-item background-color-panel'>
+      <h3>{{ purchase.product.metadata.name }}</h3>
+      <p><b>Price:</b> {{ purchase.product.price.payment_token }} {{ purchase.product.price.value / 1e18 | number: '1.3'}}</p>
+      <p><b>Purchased on:</b> {{ dateToLocalTimeString(purchase.created_at) }} (your local time)</p>
+      <p *ngIf="purchase?.transaction?.hash"><b>Transaction:</b>&nbsp;<a class="color-text" href="https://etherscan.io/tx/{{ purchase.transaction.hash }}">{{ purchase.transaction.hash }}</a></p>
+      <p>
+        <ng-container *ngIf="purchase.status == 'success'">
+          <button mat-icon-button><mat-icon>check_circle_outline</mat-icon></button> &nbsp; Purchase successful
+        </ng-container>
+        <ng-container *ngIf="purchase.status == 'payment_pending'">
+          <button mat-icon-button><mat-icon>update</mat-icon></button> &nbsp; Waiting for transaction to be processed...
+        </ng-container>
+        <ng-container *ngIf="purchase.status != 'success' && purchase.status != 'payment_pending'">
+          <button mat-icon-button><mat-icon>highlight_off</mat-icon></button> &nbsp; {{ purchase.status_message }}
+        </ng-container>
+      </p>
+    </div>
+  </ng-container>
+  
+  <ng-container *ngIf="purchases.length == 0">
+  No past purchases found.
+  </ng-container>
+</div>

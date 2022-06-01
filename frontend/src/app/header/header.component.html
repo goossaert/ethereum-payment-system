@@ -1,0 +1,10 @@
+<mat-toolbar color="primary">
+  <p *ngIf="!isUserAuthenticated">
+    <button (click)="onSignIn()">Connect wallet</button>
+  </p>
+
+  <p *ngIf="isUserAuthenticated" class='white-text'>
+    {{ ethAddressForDisplay }} &nbsp;
+    <button (click)="onSignOut()">Sign out</button>
+  </p>
+</mat-toolbar>

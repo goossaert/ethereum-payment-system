@@ -1,0 +1,16 @@
+
+.membership-plan {
+    padding: .3em;
+    width: 500px;
+    border-radius: 3px;
+    margin:0.5em;
+    border: 2px solid rgb(0, 0, 0);
+}
+
+.purchase-history-item {
+    padding: .3em;
+    width: 700px;
+    border-radius: 3px;
+    margin:0.5em;
+    border: 2px solid rgb(0, 0, 0);
+}
